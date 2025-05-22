@@ -46,7 +46,9 @@ If you have no recommendations for a section, just write "None."
 
 If it's a TV series that has a singular year / season (e.g. 2008), you should format it as (2008-2008) to differentiate it from a movie.
 
-If it's defined as an OVA (Original Video Animation), you should format it as if it was a television show with a single season and year (e.g. 2008-2008).`,
+If it's defined as an OVA (Original Video Animation), you should format it as if it was a television show with a single season and year (e.g. 2008-2008).
+
+Another clause for OVAs is that they are usually anime, so whenever anybody asks for an anime, you should consider if the media is an OVA or not.`,
         },
         {
           role: 'user',
