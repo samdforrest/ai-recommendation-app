@@ -24,11 +24,25 @@ app.post('/recommendations', async (req, res) => {
 
   try {
     const chatResponse = await openai.chat.completions.create({
-      model: 'llama3-8b-8192', // Or try 'llama3-8b-8192'
+      model: 'llama3-8b-8192',
       messages: [
         {
           role: 'system',
-          content: 'You are a helpful assistant that recommends movies or shows based on the user\'s description.',
+          content: `You are a helpful assistant that recommends movies or shows based on the user's description.
+Always respond with two sections: "Movies" and "TV Series". 
+Each section should be a numbered list in this format:
+1. **Title** (Year): Description
+
+For example:
+Movies:
+1. **Inception** (2010): A mind-bending thriller about dreams within dreams.
+2. **The Dark Knight** (2008): Batman faces the Joker in this gritty crime drama.
+
+TV Series:
+1. **Breaking Bad** (2008-2013): A chemistry teacher turns to making meth.
+2. **Stranger Things** (2016-present): Kids in a small town encounter supernatural forces.
+
+If you have no recommendations for a section, just write "None."`,
         },
         {
           role: 'user',
@@ -38,43 +52,40 @@ app.post('/recommendations', async (req, res) => {
     });
 
     const reply = chatResponse.choices[0].message.content;
-    console.log('🤖 Raw AI reply:\n', reply); // Add this line
-    
-    // const parseRecommendations = (text) => {
-    //     const result = {
-    //         movies: [],
-    //         shows: [],
-    //     };
+    console.log('🤖 Raw AI reply:\n', reply);
 
-    //     const movieSection = text.split('Movies:')[1]?.split('TV Shows:')[0];
-    //     const showSection = text.split('TV Shows:')[1];
+    // --- Improved Parser function ---
+    const parseRecommendations = (text) => {
+      const movies = [];
+      const shows = [];
 
-    //     const parseLines = (section) => {
-    //         return section
-    //         ?.split('\n')
-    //         .filter(line => /^\d+\.\s*".+?"\s*\(.+?\)\s*-\s*/.test(line))
-    //         .map(line => {
-    //             const match = line.match(/^\d+\.\s*"(.+?)"\s*\((.+?)\)\s*-\s*(.*)/);
-    //             if (match) {
-    //             return {
-    //                 title: match[1],
-    //                 year: match[2],
-    //                 description: match[3],
-    //             };
-    //             }
-    //             return null;
-    //         })
-    //         .filter(Boolean);
-    //     };
+      // Matches lines like: 1. **Title** (Year): Description
+      // or: 1. **Title** (StartYear-EndYear): Description
+      // or: 1. **Title** (StartYear-present): Description
+      const recRegex = /^(\d+\.|\*)\s*\*\*(.+?)\*\*\s*\(([^)]+)\)\s*[:-]\s*(.+)$/gm;
+      let match;
+      while ((match = recRegex.exec(text)) !== null) {
+        const title = match[2].trim();
+        const yearOrRange = match[3].trim();
+        const description = match[4].trim();
 
-    //     if (movieSection) result.movies = parseLines(movieSection);
-    //     if (showSection) result.shows = parseLines(showSection);
+        // If yearOrRange matches a single 4-digit year, it's a movie
+        // If it matches a range (e.g. 2008-2013) or ends with 'present', it's a TV series
+        if (/^\d{4}$/.test(yearOrRange)) {
+          movies.push({ title, year: yearOrRange, description });
+        } else if (/^\d{4}-(\d{4}|present)$/i.test(yearOrRange)) {
+          shows.push({ title, year: yearOrRange, description });
+        } else {
+          // fallback: if not matching either, you can decide where to put it or skip
+          movies.push({ title, year: yearOrRange, description });
+        }
+      }
 
-    //     return result;
-    // };
+      return { movies, shows };
+    };
 
-    //const structured = parseRecommendations(reply);
-    res.json({ raw: reply });
+    const structured = parseRecommendations(reply);
+    res.json({ raw: reply, ...structured });
 
   } catch (error) {
     console.error('🔥 ERROR:', error);
@@ -82,7 +93,7 @@ app.post('/recommendations', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
