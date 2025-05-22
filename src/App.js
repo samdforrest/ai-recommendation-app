@@ -1,12 +1,24 @@
-import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 function App() {
   const [prompt, setPrompt] = useState('');
   const [movies, setMovies] = useState([]);
   const [shows, setShows] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const textareaRef = useRef(null); // Step 1: Ref for textarea
+
+  // Step 2: Auto-grow handler
+  const handleInputChange = (e) => {
+    setPrompt(e.target.value);
+
+    const el = textareaRef.current;
+    if (el) {
+      el.style.height = 'auto'; // Reset height to shrink if needed
+      el.style.height = el.scrollHeight + 'px'; // Set to content height
+    }
+  };
 
   const getRecommendations = async () => {
     setLoading(true);
@@ -33,50 +45,60 @@ function App() {
   };
 
   return (
-    <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
+    <div className="app-container">
       <h1>AI Show/Movie Recommender</h1>
 
-      <textarea
-        rows="3"
-        style={{ width: '100%', marginBottom: '1rem' }}
-        placeholder="What kind of shows or movies are you in the mood for?"
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
-      />
+      {/* Input Section */}
+      <div className="input-section">
+        <textarea
+          ref={textareaRef}
+          className="prompt-input"
+          rows="1"
+          placeholder="What kind of shows or movies are you in the mood for?"
+          value={prompt}
+          onChange={handleInputChange}
+        />
+        <button
+          className="recommend-button"
+          onClick={getRecommendations}
+          disabled={loading}
+        >
+          {loading ? 'Loading...' : 'Get Recommendations'}
+        </button>
+      </div>
 
-      <button onClick={getRecommendations} disabled={loading}>
-        {loading ? 'Loading...' : 'Get Recommendations'}
-      </button>
-
-      <div style={{ marginTop: '2rem' }}>
+      {/* Results Section */}
+      <div className="results-section">
         {movies.length > 0 && (
-          <>
+          <div className="category">
             <h2>Movies</h2>
             <ul>
               {movies.map((rec, index) => (
-                <li key={index} style={{ marginBottom: '1rem' }}>
+                <li key={index}>
                   <strong>{rec.title}</strong> ({rec.year})<br />
                   <em>{rec.description}</em>
                 </li>
               ))}
             </ul>
-          </>
+          </div>
         )}
+
         {shows.length > 0 && (
-          <>
+          <div className="category">
             <h2>TV Series</h2>
             <ul>
               {shows.map((rec, index) => (
-                <li key={index} style={{ marginBottom: '1rem' }}>
+                <li key={index}>
                   <strong>{rec.title}</strong> ({rec.year})<br />
                   <em>{rec.description}</em>
                 </li>
               ))}
             </ul>
-          </>
+          </div>
         )}
+
         {movies.length === 0 && shows.length === 0 && !loading && (
-          <div style={{ color: '#888' }}>No recommendations yet.</div>
+          <div className="no-results">No recommendations yet.</div>
         )}
       </div>
     </div>
