@@ -1,6 +1,8 @@
 import './App.css';
 import { useState, useRef } from 'react';
 
+const apiURL = process.env.REACT_APP_API_URL; // Add this line
+
 function App() {
   const [prompt, setPrompt] = useState('');
   const [movies, setMovies] = useState([]);
@@ -26,7 +28,7 @@ function App() {
     setShows([]);
 
     try {
-      const res = await fetch('/recommendations', {
+      const res = await fetch('${apiURL}/recommendations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt }),
@@ -48,7 +50,7 @@ function App() {
     <div className="app-container">
       <div className="app-header">
         <h1>AI Media Recommender</h1>
-        <h3 className="subheading">Ask AI for your new selection of Movies and TV!</h3>
+        <h3 className="subheading">Ask for your new selection of Movies and TV!</h3>
       </div>
 
       {/* Input Section */}
