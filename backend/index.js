@@ -42,7 +42,9 @@ TV Series:
 1. **Breaking Bad** (2008-2013): A chemistry teacher turns to making meth.
 2. **Stranger Things** (2016-present): Kids in a small town encounter supernatural forces.
 
-If you have no recommendations for a section, just write "None."`,
+If you have no recommendations for a section, just write "None."
+
+If it's a TV series that has a singular year (e.g. 2008), you should format it as (2008-2008) to differentiate it from a movie.`,
         },
         {
           role: 'user',
