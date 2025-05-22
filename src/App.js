@@ -46,7 +46,8 @@ function App() {
 
   return (
     <div className="app-container">
-      <h1>AI Show/Movie Recommender</h1>
+      <h1>AI Media Recommender</h1>
+      <h3 style={{ fontWeight: 'normal' }}>Ask AI for your new selection of Movies and TV!</h3>
 
       {/* Input Section */}
       <div className="input-section">
@@ -70,7 +71,7 @@ function App() {
       {/* Results Section */}
       <div className="results-section">
         {movies.length > 0 && (
-          <div className="category">
+          <div className="category" style={{ animationDelay: '0.1s' }}>
             <h2>Movies</h2>
             <ul>
               {movies.map((rec, index) => (
@@ -84,7 +85,7 @@ function App() {
         )}
 
         {shows.length > 0 && (
-          <div className="category">
+          <div className="category" style={{ animationDelay: '0.2s' }}>
             <h2>TV Series</h2>
             <ul>
               {shows.map((rec, index) => (
