@@ -2,6 +2,8 @@ import './App.css';
 import { useState, useRef } from 'react';
 
 const apiURL = process.env.REACT_APP_API_URL; // Add this line
+console.log('API URL:', apiURL);
+
 
 function App() {
   const [prompt, setPrompt] = useState('');
