@@ -6,7 +6,7 @@ import { OpenAI } from 'openai';
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: 'https://your-frontend.vercel.app' }));
 app.use(express.json());
 
 // Point OpenAI SDK to Groq's endpoint
