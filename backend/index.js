@@ -79,7 +79,10 @@ Another clause for OVAs is that they are usually anime, so whenever anybody asks
         // If it matches a range (e.g. 2008-2013) or ends with 'present', it's a TV series
         if (/^\d{4}$/.test(yearOrRange)) {
           movies.push({ title, year: yearOrRange, description });
-        } else if (/^\d{4}-(\d{4}|present)$/i.test(yearOrRange)) {
+        } else if (
+          /^\d{4}-(\d{4}|present)$/i.test(yearOrRange) ||             // Single range
+          /^(\d{4}-(\d{4}|present))(,\s*\d{4}-(\d{4}|present))*$/i.test(yearOrRange)  // Multiple ranges
+        ) {
           shows.push({ title, year: yearOrRange, description });
         } else {
           // fallback: if not matching either, you can decide where to put it or skip
