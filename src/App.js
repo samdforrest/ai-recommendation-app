@@ -46,8 +46,10 @@ function App() {
 
   return (
     <div className="app-container">
-      <h1>AI Media Recommender</h1>
-      <h3 style={{ fontWeight: 'normal' }}>Ask AI for your new selection of Movies and TV!</h3>
+      <div className="app-header">
+        <h1>AI Media Recommender</h1>
+        <h3 className="subheading">Ask AI for your new selection of Movies and TV!</h3>
+      </div>
 
       {/* Input Section */}
       <div className="input-section">
@@ -58,6 +60,12 @@ function App() {
           placeholder="What kind of shows or movies are you in the mood for?"
           value={prompt}
           onChange={handleInputChange}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault(); // Prevent new line
+              getRecommendations(); // Triggers the recommendation button
+            }
+          }}
         />
         <button
           className="recommend-button"
