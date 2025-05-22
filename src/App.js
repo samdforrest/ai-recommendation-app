@@ -28,7 +28,7 @@ function App() {
     setShows([]);
 
     try {
-      const res = await fetch('${apiURL}/recommendations', {
+      const res = await fetch(`${apiURL}/recommendations`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt }),
