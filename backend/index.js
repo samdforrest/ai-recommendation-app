@@ -44,7 +44,7 @@ TV Series:
 
 If you have no recommendations for a section, just write "None."
 
-After every recommendation, add a note about where they can watch it, for example: (Available on Netflix, Amazon Prime, etc.).
+For each recommendation, add a note about where they can watch it, for example: (Available on Netflix, Amazon Prime, etc.).
 
 If it's a TV series that has a singular year / season (e.g. 2008), you should format it as (2008-2008) to differentiate it from a movie.
 
